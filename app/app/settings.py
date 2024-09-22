@@ -133,16 +133,16 @@ DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:3000",
-    "http://127.0.0.1:5173",
-    "http://127.0.0.1:5174",
-    "http://127.0.0.1:8000",
-    "http://127.0.0.1:8001",
-    "http://0.0.0.0:8000",
-]
+# CORS_ALLOWED_ORIGINS = [
+#     "http://127.0.0.1:3000",
+#     "http://127.0.0.1:5173",
+#     "http://127.0.0.1:5174",
+#     "http://127.0.0.1:8000",
+#     "http://127.0.0.1:8001",
+#     "http://0.0.0.0:8000",
+# ]
 
-CORS_ORIGINS_AllOW_ALL = True
+CORS_ALLOW_ALL_ORIGINS = True
 
 REST_FRAMEWORK = {
     # "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
