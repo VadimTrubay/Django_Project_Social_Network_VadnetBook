@@ -19,6 +19,7 @@ class SignupView(generics.CreateAPIView):
 
     queryset = CustomUserModel.objects.all()
     serializer_class = SignupSerializer
+    permission_classes = [AllowAny]
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -54,7 +55,7 @@ class LogoutView(APIView):
     Logout user.
     """
 
-    permission_classes = (IsAuthenticated,)
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         return Response({"message": "Successfully logout"}, status=200)
