@@ -1,4 +1,5 @@
 from rest_framework import generics
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
@@ -8,8 +9,16 @@ from users.models import CustomUserModel
 from users.serializers import (
     SignupSerializer,
     SigninSerializer,
-    CustomUserModelSerializer,
+    CustomUserSerializer,
+    UserProfileSerializer,
+    UsersListSerializer,
 )
+
+
+class UsersPagination(PageNumberPagination):
+    page_size = 3
+    page_size_query_param = "page_size"
+    max_page_size = 3
 
 
 class SignupView(generics.CreateAPIView):
@@ -43,7 +52,19 @@ class UserDetailView(generics.RetrieveAPIView):
     Get user details.
     """
 
-    serializer_class = CustomUserModelSerializer
+    serializer_class = CustomUserSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
+
+
+class UserProfileView(generics.RetrieveAPIView):
+    """
+    Get user profile details.
+    """
+
+    serializer_class = UserProfileSerializer
     permission_classes = [IsAuthenticated]
 
     def get_object(self):
@@ -59,3 +80,14 @@ class LogoutView(APIView):
 
     def post(self, request):
         return Response({"message": "Successfully logout"}, status=200)
+
+
+class UsersDetailView(generics.ListAPIView):
+    """
+    Get users list details.
+    """
+
+    queryset = CustomUserModel.objects.all()
+    serializer_class = UsersListSerializer
+    permission_classes = [AllowAny]
+    pagination_class = UsersPagination

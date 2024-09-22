@@ -28,6 +28,8 @@ class CustomUserModel(AbstractUser):
     email = models.EmailField(
         validators=[EmailValidator()], unique=True, blank=False, null=False
     )
+    followed = models.BooleanField(default=False, blank=True)
+    status = models.CharField(max_length=50, blank=True, null=True)
     website_page = models.URLField(validators=[URLValidator()], blank=True, null=True)
     github_page = models.URLField(validators=[URLValidator()], blank=True, null=True)
     linkedin_page = models.URLField(validators=[URLValidator()], blank=True, null=True)
@@ -42,7 +44,7 @@ class CustomUserModel(AbstractUser):
         null=True,
     )
     profile_picture = models.ImageField(
-        upload_to="static/images/",
+        upload_to=user_directory_path,
         default="profile_pictures/profile_picture_default.jpg",
         validators=[
             validate_file_size,

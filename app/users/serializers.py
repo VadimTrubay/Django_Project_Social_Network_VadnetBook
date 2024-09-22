@@ -51,13 +51,23 @@ class SignupSerializer(serializers.ModelSerializer):
         return {"access_token": str(access_token)}
 
 
-class CustomUserModelSerializer(serializers.ModelSerializer):
+class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUserModel
         fields = (
             "id",
             "username",
             "email",
+        )
+
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = (
+            "id",
+            "username",
+            "email",
+            "status",
             "first_name",
             "last_name",
             "website_page",
@@ -66,9 +76,21 @@ class CustomUserModelSerializer(serializers.ModelSerializer):
             "looking_from_job",
             "job_skills",
             "about_me",
-            "about_me",
             "birth_date",
-            "phone_number",
             "profile_picture",
+            "phone_number",
             "date_joined",
         )
+        model = CustomUserModel
+
+
+class UsersListSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = (
+            "id",
+            "username",
+            "followed",
+            "status",
+            "profile_picture",
+        )
+        model = CustomUserModel
