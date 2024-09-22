@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  vadnetbook:
+    build: .
+    command: python app/manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    networks:
+      - app_network
+
+networks:
+  app_network:
+
+volumes:
+  postgres_data:

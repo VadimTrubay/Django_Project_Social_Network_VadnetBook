@@ -4,7 +4,10 @@ from datetime import timedelta
 import environ
 from pathlib import Path
 
+# basedir from path
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# basedir from location .env file
 BASE_DIR_ENV = Path(__file__).resolve().parent.parent.parent
 
 env = environ.Env(DEBUG=(bool, False))
@@ -30,16 +33,12 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
-    # swager documentations
-    "drf_spectacular",
-
-    # allauth apps
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
-
+    "drf_spectacular",  # include swegger docs
+    "rest_framework",  # include django rest framework
+    "rest_framework_simplejwt",  # include django simple jwt
+    "corsheaders",  # include django cors
+    # include my app
+    "users.apps.UsersConfig",
 ]
 
 MIDDLEWARE = [
@@ -50,8 +49,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-
-    "corsheaders.middleware.CorsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",  # include corsheaders
 ]
 
 ROOT_URLCONF = "app.urls"
@@ -74,9 +72,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "app.wsgi.application"
 
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
+# include database sqlite3
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -84,6 +80,7 @@ DATABASES = {
     }
 }
 
+# include database postgresql
 # DATABASES = {
 #     "default": {
 #         "ENGINE": "django.db.backends.postgresql",
@@ -122,13 +119,17 @@ USE_I18N = True
 
 USE_TZ = True
 
-# Папка для продакшена
-STATIC_ROOT = BASE_DIR / "staticfiles"
-# Папка для разработки
-STATICFILES_DIRS = (BASE_DIR / "static",)
 
-# Static files (CSS, JavaScript, Images)
-STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"  # folder from productions
+
+STATICFILES_DIRS = (BASE_DIR / "static",)  # folder from development
+
+STATIC_URL = "/static/"  # Static files (CSS, JavaScript, Images)
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
@@ -143,25 +144,24 @@ CORS_ALLOWED_ORIGINS = [
 CORS_ORIGINS_AllOW_ALL = True
 
 REST_FRAMEWORK = {
+    # "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
+    # "PAGE_SIZE": 10,
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
-        # "rest_framework.authentication.SessionAuthentication",  # Для работы с сессиями
-        # "rest_framework.authentication.BasicAuthentication",  # Для работы с базовой аутентификацией
-        # "rest_framework.authentication.TokenAuthentication",
+        "rest_framework_simplejwt.authentication.JWTAuthentication",  # from using JWTToken auth
+        "rest_framework.authentication.BasicAuthentication",  # from using base auth
+        # "rest_framework.authentication.SessionAuthentication",  # from using base auth
+        # "rest_framework.authentication.TokenAuthentication",  # from using Token auth
     ),
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",  # include SWAGER schema
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
     ],
-    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
-AUTH_USER_MODEL = "users.UserModel"
-
+AUTH_USER_MODEL = "users.CustomUserModel"
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(days=1),  # Продолжительность жизни токена
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=1),  # Token expiration
     "AUTH_HEADER_TYPES": ("Bearer",),
     "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
 }
-
-SITE_ID = 1
