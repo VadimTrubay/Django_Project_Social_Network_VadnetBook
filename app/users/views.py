@@ -16,9 +16,9 @@ from users.serializers import (
 
 
 class UsersPagination(PageNumberPagination):
-    page_size = 3
+    page_size = 30
     page_size_query_param = "page_size"
-    max_page_size = 3
+    max_page_size = 100
 
 
 class SignupView(generics.CreateAPIView):
@@ -71,17 +71,6 @@ class UserProfileView(generics.RetrieveAPIView):
         return self.request.user
 
 
-class LogoutView(APIView):
-    """
-    Logout user.
-    """
-
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request):
-        return Response({"message": "Successfully logout"}, status=200)
-
-
 class UsersDetailView(generics.ListAPIView):
     """
     Get users list details.
@@ -91,3 +80,14 @@ class UsersDetailView(generics.ListAPIView):
     serializer_class = UsersListSerializer
     permission_classes = [AllowAny]
     pagination_class = UsersPagination
+
+
+class LogoutView(APIView):
+    """
+    Logout user.
+    """
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        return Response({"message": "Successfully logout"}, status=200)

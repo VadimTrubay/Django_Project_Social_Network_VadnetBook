@@ -63,6 +63,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
+        model = CustomUserModel
         fields = (
             "id",
             "username",
@@ -81,11 +82,11 @@ class UserProfileSerializer(serializers.ModelSerializer):
             "phone_number",
             "date_joined",
         )
-        model = CustomUserModel
 
 
 class UsersListSerializer(serializers.ModelSerializer):
     class Meta:
+        model = CustomUserModel
         fields = (
             "id",
             "username",
@@ -93,4 +94,3 @@ class UsersListSerializer(serializers.ModelSerializer):
             "status",
             "profile_picture",
         )
-        model = CustomUserModel

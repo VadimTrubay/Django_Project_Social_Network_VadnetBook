@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "corsheaders",  # include django cors
     # include my app
     "users.apps.UsersConfig",
+    "seed",
 ]
 
 MIDDLEWARE = [
@@ -118,7 +119,6 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 
 USE_TZ = True
-
 
 STATIC_ROOT = BASE_DIR / "staticfiles"  # folder from productions
 
