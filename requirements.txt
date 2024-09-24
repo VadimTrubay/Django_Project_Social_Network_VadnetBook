@@ -1,4 +1,4 @@
-django==3.2.24
+django==5.0.2
 djangorestframework==3.15.0
 django-environ==3.10.0
 django-cors-headers==4.4.0
