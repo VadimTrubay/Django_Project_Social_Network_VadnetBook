@@ -35,7 +35,8 @@ class UserProfileModel(models.Model):
     profile_picture = CloudinaryField(
         "image",
         transformation={"width": 500, "height": 500, "crop": "fill"},
-        default="profile_pictures/profile_picture_default.jpg",
+        blank=True,
+        null=True,
     )  # Profile picture cloudinary field
     phone_number = models.CharField(
         max_length=15,
