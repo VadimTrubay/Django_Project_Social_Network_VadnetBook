@@ -166,9 +166,9 @@ REST_FRAMEWORK = {
         # "rest_framework.authentication.TokenAuthentication",  # from using Token auth
     ),
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",  # include SWAGER schema
-    "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.IsAuthenticated",
-    ],
+    # "DEFAULT_PERMISSION_CLASSES": [
+    #     "rest_framework.permissions.IsAuthenticated",
+    # ],
 }
 
 AUTH_USER_MODEL = "authenticate.CustomUserModel"
