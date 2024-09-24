@@ -4,12 +4,6 @@ from datetime import datetime, date
 from django.core.exceptions import ValidationError
 
 
-def validate_file_size(value):
-    max_size = 1024 * 1024
-    if value.size > max_size:
-        raise ValidationError("No more than 1 MB")
-
-
 def phone_number_validator(value):
     # Regular expression to validate phone number (e.g. international format)
     phone_regex = re.compile(r"^\+?1?\d{9,15}$")

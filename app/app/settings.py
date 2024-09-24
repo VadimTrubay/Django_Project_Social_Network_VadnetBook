@@ -37,7 +37,11 @@ INSTALLED_APPS = [
     "rest_framework",  # include django rest framework
     "rest_framework_simplejwt",  # include django simple jwt
     "corsheaders",  # include django cors
+    "cloudinary_storage",  # include cloudinary storage
+    "cloudinary",  # include cloudinary storage
     # include my app
+    "authenticate.apps.AuthConfig",
+    "userprofile.apps.UserprofileConfig",
     "users.apps.UsersConfig",
     "seed",
 ]
@@ -77,7 +81,7 @@ WSGI_APPLICATION = "app.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3_vadnetbook",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
 
@@ -129,7 +133,15 @@ STATIC_URL = "/static/"  # Static files (CSS, JavaScript, Images)
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
-DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
+# Configure Cloudinary storage
+CLOUDINARY_STORAGE = {
+    "CLOUD_NAME": env("CLOUDINARY_CLOUD_NAME"),
+    "API_KEY": env("CLOUDINARY_API_KEY"),
+    "API_SECRET": env("CLOUDINARY_API_SECRET"),
+}
+
+# DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
+DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
@@ -159,7 +171,7 @@ REST_FRAMEWORK = {
     ],
 }
 
-AUTH_USER_MODEL = "users.CustomUserModel"
+AUTH_USER_MODEL = "authenticate.CustomUserModel"
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=1),  # Token expiration
