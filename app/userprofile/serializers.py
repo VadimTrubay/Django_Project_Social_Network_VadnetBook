@@ -7,7 +7,13 @@ from .models import UserProfileModel
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUserModel
-        fields = ("id", "username", "email", "first_name", "last_name")  # Add any other fields you need
+        fields = (
+            "id",
+            "username",
+            "email",
+            "first_name",
+            "last_name",
+        )  # Add any other fields you need
 
 
 class UserProfileSerializer(serializers.ModelSerializer):

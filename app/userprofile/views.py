@@ -102,5 +102,5 @@ class ProfileDeleteView(generics.DestroyAPIView):
         user_id = user.id  # Store the user's ID to confirm deletion later
         user.delete()
         return Response(
-            {"message": f"User {user_id} deleted successfully."}, status=200
+            {"id": {user_id}}, status=200
         )
