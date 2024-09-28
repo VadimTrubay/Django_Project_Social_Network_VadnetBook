@@ -1,4 +1,4 @@
-from rest_framework import generics, serializers
+from rest_framework import generics, serializers, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -97,6 +97,5 @@ class ProfileDeleteView(generics.DestroyAPIView):
 
     def delete(self, request, *args, **kwargs):
         user = self.get_object()
-        user_id = user.id  # Store the user's ID to confirm deletion later
         user.delete()
-        return Response({"id": {user_id}}, status=200)
+        return Response(status=status.HTTP_204_NO_CONTENT)

@@ -52,6 +52,10 @@ class SignUpSerializer(serializers.ModelSerializer):
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
+    """
+    Serializer for user details.
+    """
+
     class Meta:
         model = CustomUserModel
         fields = (

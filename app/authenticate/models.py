@@ -18,9 +18,28 @@ class CustomUserModel(AbstractUser):
     )
     first_name = models.CharField(max_length=50, blank=True, null=True)
     last_name = models.CharField(max_length=50, blank=True, null=True)
-
+    # Отношение подписок
+    following = models.ManyToManyField(
+        "self", through="UserRelationship", symmetrical=False, related_name="followers"
+    )
     USERNAME_FIELD = "email"  # Используем email для аутентификации
     REQUIRED_FIELDS = ["username"]  # Поле username все еще требуется
 
     def __str__(self):
         return self.username
+
+
+class UserRelationship(models.Model):
+    follower = models.ForeignKey(
+        CustomUserModel, related_name="following_set", on_delete=models.CASCADE
+    )
+    following = models.ForeignKey(
+        CustomUserModel, related_name="follower_set", on_delete=models.CASCADE
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("follower", "following")  # Запрещаем дублирующиеся связи
+
+    def __str__(self):
+        return f"{self.follower} -> {self.following}"

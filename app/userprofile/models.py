@@ -17,7 +17,6 @@ class UserProfileModel(models.Model):
     """
 
     user = models.OneToOneField(CustomUserModel, on_delete=models.CASCADE)
-    is_friend = models.BooleanField(default=False, blank=True)
     status = models.CharField(max_length=50, blank=True, null=True)
     website_page = models.URLField(validators=[URLValidator()], blank=True, null=True)
     github_page = models.URLField(validators=[URLValidator()], blank=True, null=True)
