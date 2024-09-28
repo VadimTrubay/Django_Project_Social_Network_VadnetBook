@@ -12,10 +12,15 @@ class CustomUserModel(AbstractUser):
     id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False
     )  # Auto create UUID
-    username = models.CharField(max_length=50, unique=True, blank=False, null=False)
+    username = models.CharField(max_length=50, unique=False, blank=False, null=False)
     email = models.EmailField(
         validators=[EmailValidator()], unique=True, blank=False, null=False
     )
+    first_name = models.CharField(max_length=50, blank=True, null=True)
+    last_name = models.CharField(max_length=50, blank=True, null=True)
+
+    USERNAME_FIELD = "email"  # Используем email для аутентификации
+    REQUIRED_FIELDS = ["username"]  # Поле username все еще требуется
 
     def __str__(self):
         return self.username

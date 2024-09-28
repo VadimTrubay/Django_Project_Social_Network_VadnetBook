@@ -4,10 +4,10 @@ from rest_framework.response import Response
 
 from userprofile.models import UserProfileModel
 from userprofile.serializers import (
-    UserProfileSerializer,
     UserProfilePhotoSerializer,
     UserProfileStatusSerializer,
     EditUserProfileSerializer,
+    UserProfileSerializer,
 )
 
 
@@ -36,10 +36,8 @@ class ProfileUpdateView(generics.UpdateAPIView):
     http_method_names = ["patch"]
 
     def get_object(self):
-        # Return the logged-in user's profile
         return UserProfileModel.objects.get(user=self.request.user)
 
-    # Only allow partial updates (PATCH)
     def patch(self, request, *args, **kwargs):
         return self.partial_update(request, *args, **kwargs)
 
@@ -101,6 +99,4 @@ class ProfileDeleteView(generics.DestroyAPIView):
         user = self.get_object()
         user_id = user.id  # Store the user's ID to confirm deletion later
         user.delete()
-        return Response(
-            {"id": {user_id}}, status=200
-        )
+        return Response({"id": {user_id}}, status=200)

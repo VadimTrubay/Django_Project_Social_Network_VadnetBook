@@ -16,6 +16,16 @@ class UserSerializer(serializers.ModelSerializer):
         )  # Add any other fields you need
 
 
+class EditUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUserModel
+        fields = (
+            "username",
+            "first_name",
+            "last_name",
+        )
+
+
 class UserProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer()
 
@@ -37,10 +47,12 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 
 class EditUserProfileSerializer(serializers.ModelSerializer):
+    user = EditUserSerializer()
 
     class Meta:
         model = UserProfileModel
         fields = (
+            "user",
             "website_page",
             "github_page",
             "linkedin_page",
@@ -50,6 +62,19 @@ class EditUserProfileSerializer(serializers.ModelSerializer):
             "birth_date",
             "phone_number",
         )
+
+    def update(self, instance, validated_data):
+        # Обновляем данные пользователя
+        user_data = validated_data.pop("user", None)
+        if user_data:
+            user_serializer = EditUserSerializer(
+                instance.user, data=user_data, partial=True
+            )
+            if user_serializer.is_valid():
+                user_serializer.save()
+
+        # Обновляем данные профиля
+        return super().update(instance, validated_data)
 
 
 class UserProfilePhotoSerializer(serializers.ModelSerializer):
