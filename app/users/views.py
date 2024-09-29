@@ -19,6 +19,7 @@ from users.serializers import (
     FollowersListSerializer,
     FollowingListSerializer,
 )
+from rest_framework import filters
 
 
 class UsersPagination(PageNumberPagination):
@@ -32,18 +33,21 @@ class UsersListView(ListAPIView):
     Get users list details excluding the current user.
     """
 
+    queryset = UserProfileModel.objects.all().order_by("-user__date_joined")
     serializer_class = UsersListSerializer
     permission_classes = [AllowAny]
     pagination_class = UsersPagination
+    filter_backends = [filters.SearchFilter]
+    search_fields = ["user__username"]
 
-    def get_queryset(self):
-        # # Получаем текущего пользователя
-        # current_user = self.request.user
+    # def get_queryset(self):
+    # # Получаем текущего пользователя
+    # current_user = self.request.user
 
-        return UserProfileModel.objects.all()
-        # Возвращаем всех пользователей, кроме текущего
-        # return UserProfileModel.objects.exclude(user=current_user)
-        # )
+    # return UserProfileModel.objects.all()
+    # Возвращаем всех пользователей, кроме текущего
+    # return UserProfileModel.objects.exclude(user=current_user)
+    # )
 
 
 class UserDetailView(GenericAPIView):
@@ -178,19 +182,18 @@ class FollowingListView(ListAPIView):
         return context
 
 
-class UsersSearchResultsView(ListAPIView):
-    """
-    Get list of users whose username matches the search query.
-    """
-
-    serializer_class = UsersListSerializer
-    permission_classes = [AllowAny]
-    pagination_class = UsersPagination
-
-    def get_queryset(self):
-        query = self.request.query_params.get("q", None)
-        print(query)
-        if query is not None:
-            return UserProfileModel.objects.filter(user__username__icontains=query)
-        else:
-            return UserProfileModel.objects.all()
+# class UsersSearchResultsView(ListAPIView):
+#     """
+#     Get list of users whose username matches the search query.
+#     """
+#
+#     serializer_class = UsersListSerializer
+#     permission_classes = [AllowAny]
+#     pagination_class = UsersPagination
+#
+#     def get_queryset(self):
+#         query = self.request.query_params.get("q", None)
+#         if query is not None:
+#             return UserProfileModel.objects.filter(user__username__icontains=query)
+#         else:
+#             return UserProfileModel.objects.all()

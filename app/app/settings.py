@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "corsheaders",  # include django cors
     "cloudinary_storage",  # include cloudinary storage
     "cloudinary",  # include cloudinary storage
+    "django_filters",  # include django filters
     # include my app
     "authenticate.apps.AuthConfig",
     "userprofile.apps.UserprofileConfig",
@@ -157,6 +158,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CORS_ALLOW_ALL_ORIGINS = True
 
 REST_FRAMEWORK = {
+    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
     # "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
     # "PAGE_SIZE": 10,
     "DEFAULT_AUTHENTICATION_CLASSES": (

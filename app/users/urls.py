@@ -7,7 +7,7 @@ from users.views import (
     UnfollowUserView,
     FollowersListView,
     FollowingListView,
-    UsersSearchResultsView,
+    # UsersSearchResultsView,
 )
 
 urlpatterns = [
@@ -27,6 +27,6 @@ urlpatterns = [
     path("users/followers", FollowersListView.as_view(), name="followers_list"),
     # Список тех, на кого подписан пользователь
     path("users/following", FollowingListView.as_view(), name="following_list"),
-    # Поиск пользователей по имени
-    path("users/search", UsersSearchResultsView.as_view(), name="search"),
+    # # Поиск пользователей по имени
+    # path("users/search", UsersSearchResultsView.as_view(), name="search"),
 ]
