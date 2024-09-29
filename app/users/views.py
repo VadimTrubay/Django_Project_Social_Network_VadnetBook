@@ -40,10 +40,9 @@ class UsersListView(ListAPIView):
         # # Получаем текущего пользователя
         # current_user = self.request.user
 
-        return UserProfileModel.objects.all().order_by("-user__date_joined")
+        return UserProfileModel.objects.all()
         # Возвращаем всех пользователей, кроме текущего
-        # return UserProfileModel.objects.exclude(user=current_user).order_by(
-        #     "-user__date_joined"
+        # return UserProfileModel.objects.exclude(user=current_user)
         # )
 
 
