@@ -177,3 +177,21 @@ class FollowingListView(ListAPIView):
         context = super().get_serializer_context()
         context.update({"request": self.request})  # Передаем request в контекст
         return context
+
+
+class UsersSearchResultsView(ListAPIView):
+    """
+    Get list of users whose username matches the search query.
+    """
+
+    serializer_class = UsersListSerializer
+    permission_classes = [AllowAny]
+    pagination_class = UsersPagination
+
+    def get_queryset(self):
+        query = self.request.query_params.get("q", None)
+        print(query)
+        if query is not None:
+            return UserProfileModel.objects.filter(user__username__icontains=query)
+        else:
+            return UserProfileModel.objects.all()
