@@ -40,6 +40,9 @@ INSTALLED_APPS = [
     "cloudinary_storage",  # include cloudinary storage
     "cloudinary",  # include cloudinary storage
     "django_filters",  # include django filters
+    'oauth2_provider',  # include oauth2 provider
+    'social_django',  # include social django
+    'drf_social_oauth2',  # include social oauth2 provider
     # include my app
     "authenticate.apps.AuthConfig",
     "userprofile.apps.UserprofileConfig",
@@ -50,12 +53,13 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",  # include corsheaders
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "corsheaders.middleware.CorsMiddleware",  # include corsheaders
+    'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
 ROOT_URLCONF = "app.urls"
@@ -180,3 +184,25 @@ SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ("Bearer",),
     "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
 }
+
+
+AUTHENTICATION_BACKENDS = (
+    'drf_social_oauth2.backends.DjangoOAuth2',
+    'social_core.backends.google.GoogleOAuth2',  # Google authentication backend
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+OAUTH2_PROVIDER = {
+    "ACCESS_TOKEN_EXPIRE_SECONDS": 36000,  # Change according to your requirements
+    "REFRESH_TOKEN_EXPIRE_SECONDS": 86400,
+    "SCOPES": {
+        "read": "Read scope",
+        "write": "Write scope",
+        "groups": "Access to your groups",
+    },
+}
+
+# Google OAuth2 credentials
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = env('GOOGLE_CLIENT_ID')  # Client ID from Google Console
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = env('GOOGLE_CLIENT_SECRET')  # Client Secret
+SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['email', 'profile']  # Scopes for Google authentication
