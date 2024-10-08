@@ -33,9 +33,9 @@ class UsersListView(ListAPIView):
     Get users list details excluding the current user.
     """
 
+    permission_classes = [AllowAny]
     queryset = UserProfileModel.objects.all().order_by("-user__date_joined")
     serializer_class = UsersListSerializer
-    permission_classes = [AllowAny]
     pagination_class = UsersPagination
     filter_backends = [filters.SearchFilter]
     search_fields = ["user__username"]
@@ -54,8 +54,8 @@ class UserDetailView(GenericAPIView):
     permission_classes = [AllowAny]
     serializer_class = UserDetailSerializer
 
-    def get(self, request, user_id):
-        user = get_object_or_404(CustomUserModel, pk=user_id)  # Check if user exists
+    def get(self, request, pk):
+        user = get_object_or_404(CustomUserModel, pk=pk)  # Check if user exists
         profile, created = UserProfileModel.objects.get_or_create(
             user=user
         )  # Ensure profile exists
@@ -77,9 +77,7 @@ class FollowUserView(CreateAPIView):
         }  # Передаем текущего пользователя в сериализатор
 
     def post(self, request, *args, **kwargs):
-        user_to_follow_id = self.kwargs[
-            "user_id"
-        ]  # Получаем ID пользователя для подписки
+        user_to_follow_id = self.kwargs["pk"]  # Получаем ID пользователя для подписки
         print(user_to_follow_id)
 
         # Попробуем найти пользователя с указанным UUID
@@ -110,7 +108,7 @@ class UnfollowUserView(DestroyAPIView):
 
     def get_object(self):
         user_to_unfollow = CustomUserModel.objects.get(
-            id=self.kwargs["user_id"]
+            id=self.kwargs["pk"]
         )  # Используем UUID
         return UserRelationship.objects.get(
             follower=self.request.user, following=user_to_unfollow

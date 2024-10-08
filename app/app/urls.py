@@ -20,6 +20,7 @@ urlpatterns = [
     path("api/v1/", include("authenticate.urls")),  # include auth rout
     path("api/v1/", include("userprofile.urls")),  # include userprofile rout
     path("api/v1/", include("users.urls")),  # include users rout
+    path("api/v1/", include("dialogs.urls")),  # include users rout
     path(
         "api/v1/api-auth/", include("rest_framework.urls", namespace="rest_framework")
     ),  # include rest framework rout

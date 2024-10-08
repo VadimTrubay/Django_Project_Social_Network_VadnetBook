@@ -1,5 +1,4 @@
-from rest_framework import generics
-from rest_framework.views import APIView
+from rest_framework.generics import CreateAPIView, RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenViewBase
@@ -12,7 +11,7 @@ from authenticate.serializers import (
 )
 
 
-class SignUpView(generics.CreateAPIView):
+class SignUpView(CreateAPIView):
     """
     Register new user.
     """
@@ -38,7 +37,7 @@ class SignInView(TokenViewBase):
     permission_classes = [AllowAny]
 
 
-class UserDetailView(generics.RetrieveAPIView):
+class UserDetailView(RetrieveAPIView):
     """
     Get user details.
     """
