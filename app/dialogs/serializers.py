@@ -20,7 +20,7 @@ class DialogSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Dialog
-        fields = ["id", "created_at", "users"]
+        fields = ["id", "created_at", "updated_at", "users"]
 
     def create(self, validated_data):
         request_user = self.context["request"].user
@@ -47,7 +47,7 @@ class DialogDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Dialog
-        fields = ["id", "created_at", "other_user"]
+        fields = ["id", "created_at", "updated_at", "other_user"]
 
     def get_other_user(self, obj):
         request_user = self.context["request"].user
@@ -61,4 +61,4 @@ class MessageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Message
-        fields = ["id", "dialog", "sender", "content", "created_at"]
+        fields = ["id", "created_at", "updated_at", "dialog", "sender", "content"]

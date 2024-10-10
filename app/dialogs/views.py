@@ -1,12 +1,12 @@
 from rest_framework.response import Response
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, serializers
 from rest_framework.permissions import IsAuthenticated
 from .models import Dialog, Message
 from .serializers import DialogSerializer, MessageSerializer, DialogDetailSerializer
 
 
 class DialogViewSet(viewsets.ModelViewSet):
-    queryset = Dialog.objects.all()
+    queryset = Dialog.objects.all().order_by('-updated_at')
     serializer_class = DialogSerializer
     permission_classes = [IsAuthenticated]
 
@@ -31,9 +31,29 @@ class DialogViewSet(viewsets.ModelViewSet):
 
 
 class MessageViewSet(viewsets.ModelViewSet):
-    queryset = Message.objects.all()
     serializer_class = MessageSerializer
     permission_classes = [IsAuthenticated]
 
+    def get_queryset(self):
+        # Получаем текущего пользователя
+        user = self.request.user
+        # Получаем ID диалога из URL параметров
+        dialog_id = self.kwargs.get('dialog_pk')
+
+        # Проверяем, существует ли диалог и принадлежит ли он текущему пользователю
+        dialog = Dialog.objects.filter(id=dialog_id, users=user).first()
+        if not dialog:
+            return Message.objects.none()
+
+        # Возвращаем все сообщения для данного диалога
+        return Message.objects.filter(dialog=dialog).order_by('created_at')
+
     def perform_create(self, serializer):
-        serializer.save(sender=self.request.user)
+        # Устанавливаем текущего пользователя в качестве отправителя и связываем сообщение с диалогом
+        dialog_id = self.kwargs.get('dialog_pk')
+        dialog = Dialog.objects.filter(id=dialog_id, users=self.request.user).first()
+
+        if dialog:
+            serializer.save(sender=self.request.user, dialog=dialog)
+        else:
+            raise serializers.ValidationError("Invalid dialog.")

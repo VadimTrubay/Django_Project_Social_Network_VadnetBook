@@ -36,6 +36,9 @@ class UsersListSerializer(serializers.ModelSerializer):
 
 class UserDetailSerializer(serializers.ModelSerializer):
     user = UserSerializer()  # Use nested serializer to display full user details
+    is_friend = (
+        serializers.SerializerMethodField()
+    )  # Добавляем новое поле в сериализатор
 
     class Meta:
         model = UserProfileModel
@@ -52,7 +55,20 @@ class UserDetailSerializer(serializers.ModelSerializer):
             "birth_date",
             "phone_number",
             "profile_picture",
+            "is_friend",  # Новое поле для определения подписки
         )
+
+    def get_is_friend(self, obj):
+        request_user = self.context["request"].user
+
+        # Проверяем, является ли пользователь аутентифицированным
+        if not request_user.is_authenticated:
+            return False  # Возвращаем False, если пользователь не аутентифицирован
+
+        # Проверяем подписку только для авторизованных пользователей
+        return UserRelationship.objects.filter(
+            follower=request_user, following=obj.user
+        ).exists()
 
 
 class UserRelationshipSerializer(serializers.ModelSerializer):
