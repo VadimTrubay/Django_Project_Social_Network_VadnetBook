@@ -24,7 +24,7 @@ urlpatterns = [
     path(
         "api/v1/api-auth/", include("rest_framework.urls", namespace="rest_framework")
     ),  # include rest framework rout
-    path('auth/', include('drf_social_oauth2.urls', namespace='drf')),
+    path("auth/", include("drf_social_oauth2.urls", namespace="drf")),
 ]
 
 if settings.DEBUG:

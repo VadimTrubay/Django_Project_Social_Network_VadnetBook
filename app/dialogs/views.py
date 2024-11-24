@@ -12,8 +12,7 @@ class DialogViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         # Возвращаем только те диалоги, в которых текущий пользователь является участником
-        return Dialog.objects.filter(users=self.request.user).order_by('-updated_at')
-
+        return Dialog.objects.filter(users=self.request.user).order_by("-updated_at")
 
     def perform_create(self, serializer):
         # Pass the request context to the serializer so it has access to the request user
@@ -43,7 +42,7 @@ class MessageViewSet(viewsets.ModelViewSet):
         # Получаем текущего пользователя
         user = self.request.user
         # Получаем ID диалога из URL параметров
-        dialog_id = self.kwargs.get('dialog_pk')
+        dialog_id = self.kwargs.get("dialog_pk")
 
         # Проверяем, существует ли диалог и принадлежит ли он текущему пользователю
         dialog = Dialog.objects.filter(id=dialog_id, users=user).first()
@@ -51,11 +50,11 @@ class MessageViewSet(viewsets.ModelViewSet):
             return Message.objects.none()
 
         # Возвращаем все сообщения для данного диалога
-        return Message.objects.filter(dialog=dialog).order_by('created_at')
+        return Message.objects.filter(dialog=dialog).order_by("created_at")
 
     def perform_create(self, serializer):
         # Устанавливаем текущего пользователя в качестве отправителя и связываем сообщение с диалогом
-        dialog_id = self.kwargs.get('dialog_pk')
+        dialog_id = self.kwargs.get("dialog_pk")
         dialog = Dialog.objects.filter(id=dialog_id, users=self.request.user).first()
 
         if dialog:

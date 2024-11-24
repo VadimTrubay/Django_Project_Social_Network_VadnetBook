@@ -40,9 +40,9 @@ INSTALLED_APPS = [
     "cloudinary_storage",  # include cloudinary storage
     "cloudinary",  # include cloudinary storage
     "django_filters",  # include django filters
-    'oauth2_provider',  # include oauth2 provider
-    'social_django',  # include social django
-    'drf_social_oauth2',  # include social oauth2 provider
+    "oauth2_provider",  # include oauth2 provider
+    "social_django",  # include social django
+    "drf_social_oauth2",  # include social oauth2 provider
     # include my app
     "authenticate.apps.AuthConfig",
     "userprofile.apps.UserprofileConfig",
@@ -60,7 +60,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    'social_django.middleware.SocialAuthExceptionMiddleware',
+    "social_django.middleware.SocialAuthExceptionMiddleware",
 ]
 
 ROOT_URLCONF = "app.urls"
@@ -163,6 +163,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CORS_ALLOW_ALL_ORIGINS = True
 
 REST_FRAMEWORK = {
+    "EXCEPTION_HANDLER": "utils.exception_handler.custom_exception_handler",
     "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
     # "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
     # "PAGE_SIZE": 10,
@@ -188,9 +189,9 @@ SIMPLE_JWT = {
 
 
 AUTHENTICATION_BACKENDS = (
-    'drf_social_oauth2.backends.DjangoOAuth2',
-    'social_core.backends.google.GoogleOAuth2',  # Google authentication backend
-    'django.contrib.auth.backends.ModelBackend',
+    "drf_social_oauth2.backends.DjangoOAuth2",
+    "social_core.backends.google.GoogleOAuth2",  # Google authentication backend
+    "django.contrib.auth.backends.ModelBackend",
 )
 
 OAUTH2_PROVIDER = {
@@ -204,6 +205,9 @@ OAUTH2_PROVIDER = {
 }
 
 # Google OAuth2 credentials
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = env('GOOGLE_CLIENT_ID')  # Client ID from Google Console
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = env('GOOGLE_CLIENT_SECRET')  # Client Secret
-SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['email', 'profile']  # Scopes for Google authentication
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = env("GOOGLE_CLIENT_ID")  # Client ID from Google Console
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = env("GOOGLE_CLIENT_SECRET")  # Client Secret
+SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
+    "email",
+    "profile",
+]  # Scopes for Google authentication
