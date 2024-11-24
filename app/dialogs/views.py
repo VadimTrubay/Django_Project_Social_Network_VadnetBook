@@ -6,9 +6,14 @@ from .serializers import DialogSerializer, MessageSerializer, DialogDetailSerial
 
 
 class DialogViewSet(viewsets.ModelViewSet):
-    queryset = Dialog.objects.all().order_by('-updated_at')
+    # queryset = Dialog.objects.all().order_by('-updated_at')
     serializer_class = DialogSerializer
     permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        # Возвращаем только те диалоги, в которых текущий пользователь является участником
+        return Dialog.objects.filter(users=self.request.user).order_by('-updated_at')
+
 
     def perform_create(self, serializer):
         # Pass the request context to the serializer so it has access to the request user
