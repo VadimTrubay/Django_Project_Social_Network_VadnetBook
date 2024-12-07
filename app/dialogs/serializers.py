@@ -14,9 +14,7 @@ class DialogUserSerializer(serializers.ModelSerializer):
 
 
 class DialogSerializer(serializers.ModelSerializer):
-    users = serializers.PrimaryKeyRelatedField(
-        queryset=CustomUserModel.objects.all(), write_only=True
-    )
+    users = DialogUserSerializer(many=True, read_only=True)
 
     class Meta:
         model = Dialog
@@ -62,3 +60,17 @@ class MessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
         fields = ["id", "created_at", "updated_at", "dialog", "sender", "content"]
+
+
+# class CommentSerializer(serializers.ModelSerializer):
+#     user = DialogUserSerializer(read_only=True)
+#     replies = serializers.SerializerMethodField()
+#
+#     class Meta:
+#         model = Comment
+#         fields = "__all__"
+#
+#     async def get_replies(self, obj):
+#         # Асинхронно получаем связанные комментарии
+#         replies = await sync_to_async(lambda: list(obj.replies.all()))()
+#         return CommentSerializer(replies, many=True, context=self.context).data

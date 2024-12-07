@@ -2,10 +2,12 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path, include
+from dialogs.routing import websocket_urlpatterns
 from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularSwaggerView,
 )
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),  # include admin rout
@@ -25,6 +27,7 @@ urlpatterns = [
         "api/v1/api-auth/", include("rest_framework.urls", namespace="rest_framework")
     ),  # include rest framework rout
     path("auth/", include("drf_social_oauth2.urls", namespace="drf")),
+    path("", include(websocket_urlpatterns)),
 ]
 
 if settings.DEBUG:
