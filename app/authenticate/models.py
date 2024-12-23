@@ -25,8 +25,8 @@ class CustomUserModel(AbstractUser):
     USERNAME_FIELD = "email"  # Используем email для аутентификации
     REQUIRED_FIELDS = ["username"]  # Поле username все еще требуется
 
-    def __str__(self):
-        return self.username
+    # def __str__(self):
+    #     return self.username
 
 
 class UserRelationship(models.Model):

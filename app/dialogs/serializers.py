@@ -54,23 +54,12 @@ class DialogDetailSerializer(serializers.ModelSerializer):
         return DialogUserSerializer(other_user).data if other_user else None
 
 
+# Оптимизация запросов в сериализаторе
 class MessageSerializer(serializers.ModelSerializer):
     sender = DialogUserSerializer(read_only=True)
 
     class Meta:
         model = Message
         fields = ["id", "created_at", "updated_at", "dialog", "sender", "content"]
-
-
-# class CommentSerializer(serializers.ModelSerializer):
-#     user = DialogUserSerializer(read_only=True)
-#     replies = serializers.SerializerMethodField()
-#
-#     class Meta:
-#         model = Comment
-#         fields = "__all__"
-#
-#     async def get_replies(self, obj):
-#         # Асинхронно получаем связанные комментарии
-#         replies = await sync_to_async(lambda: list(obj.replies.all()))()
-#         return CommentSerializer(replies, many=True, context=self.context).data
+        # Предзагрузка связанных объектов для уменьшения количества запросов к базе данных
+        depth = 1
