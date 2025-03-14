@@ -1,4 +1,9 @@
-from rest_framework.exceptions import ValidationError, AuthenticationFailed, NotFound, NotAuthenticated
+from rest_framework.exceptions import (
+    ValidationError,
+    AuthenticationFailed,
+    NotFound,
+    NotAuthenticated,
+)
 from django.core.exceptions import PermissionDenied
 from rest_framework.views import exception_handler
 from rest_framework.response import Response

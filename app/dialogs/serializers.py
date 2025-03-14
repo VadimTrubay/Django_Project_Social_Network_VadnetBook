@@ -14,9 +14,7 @@ class DialogUserSerializer(serializers.ModelSerializer):
 
 
 class DialogSerializer(serializers.ModelSerializer):
-    users = serializers.PrimaryKeyRelatedField(
-        queryset=CustomUserModel.objects.all(), write_only=True
-    )
+    users = DialogUserSerializer(many=True, read_only=True)
 
     class Meta:
         model = Dialog
@@ -56,9 +54,12 @@ class DialogDetailSerializer(serializers.ModelSerializer):
         return DialogUserSerializer(other_user).data if other_user else None
 
 
+# Оптимизация запросов в сериализаторе
 class MessageSerializer(serializers.ModelSerializer):
     sender = DialogUserSerializer(read_only=True)
 
     class Meta:
         model = Message
         fields = ["id", "created_at", "updated_at", "dialog", "sender", "content"]
+        # Предзагрузка связанных объектов для уменьшения количества запросов к базе данных
+        depth = 1

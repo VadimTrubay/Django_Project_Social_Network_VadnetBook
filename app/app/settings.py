@@ -24,26 +24,27 @@ POSTGRES_USER = env("POSTGRES_USER")
 POSTGRES_PASSWORD = env("POSTGRES_PASSWORD")
 POSTGRES_HOST = env("POSTGRES_HOST")
 POSTGRES_PORT = env("POSTGRES_PORT")
-
+# os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 # Application definition
 INSTALLED_APPS = [
+    "daphne",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "drf_spectacular",  # include swegger docs
-    "rest_framework",  # include django rest framework
-    "rest_framework_simplejwt",  # include django simple jwt
-    "corsheaders",  # include django cors
-    "cloudinary_storage",  # include cloudinary storage
-    "cloudinary",  # include cloudinary storage
-    "django_filters",  # include django filters
-    "oauth2_provider",  # include oauth2 provider
-    "social_django",  # include social django
-    "drf_social_oauth2",  # include social oauth2 provider
-    # include my app
+    "channels",
+    "drf_spectacular",
+    "rest_framework",
+    "rest_framework_simplejwt",
+    "corsheaders",
+    "cloudinary_storage",
+    "cloudinary",
+    "django_filters",
+    "oauth2_provider",
+    "social_django",
+    "drf_social_oauth2",
     "authenticate.apps.AuthConfig",
     "userprofile.apps.UserprofileConfig",
     "users.apps.UsersConfig",
@@ -52,9 +53,9 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",  # include corsheaders
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "corsheaders.middleware.CorsMiddleware",  # include corsheaders
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -82,6 +83,15 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "app.wsgi.application"
+ASGI_APPLICATION = "app.asgi.application"
+
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+    },
+}
+
 
 # include database sqlite3
 DATABASES = {
