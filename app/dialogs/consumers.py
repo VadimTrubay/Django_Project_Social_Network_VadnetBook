@@ -9,8 +9,6 @@ from django.db import close_old_connections
 from .models import Message, Dialog
 from .serializers import MessageSerializer
 
-from channels.db import database_sync_to_async
-
 
 class MessageConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -22,27 +20,26 @@ class MessageConsumer(AsyncWebsocketConsumer):
             return
 
         self.user = user
-        dialog_id = self.scope['url_route']['kwargs']['dialog_id']  # Получаем dialog_id из URL
-        await self.accept()
+        dialog_id = self.scope["url_route"]["kwargs"]["dialog_id"]
 
-        # Получаем диалог из базы данных
-        dialog = await self.get_dialog(dialog_id, self.user)
-        if not dialog:
-            await self.close()  # Если диалог не найден или доступ запрещен
-            return
-
+        # Инициализируем group_name перед проверкой диалога
         self.dialog_id = dialog_id
         self.group_name = f"dialog_{dialog_id}"
 
-        # Подключаем пользователя к группе
+        await self.accept()
+
+        dialog = await self.get_dialog(dialog_id, self.user)
+        if not dialog:
+            await self.close()
+            return
+
         await self.channel_layer.group_add(self.group_name, self.channel_name)
         print("WebSocket connection accepted")
 
-        # Отправляем все сообщения для этого диалога при подключении
-        messages = await self.get_messages(dialog_id)  # Это должна быть асинхронная операция
+        messages = await self.get_messages(dialog_id)
         print(messages)
 
-        # Сериализуем и отправляем все сообщения
+        # Отправка всех сообщений (если требуется)
         # await self.send_all_messages(messages)
 
     async def send_all_messages(self, messages):
@@ -52,7 +49,7 @@ class MessageConsumer(AsyncWebsocketConsumer):
         # Собираем задачи для отправки сообщений в список
         tasks = []
         for message in messages:
-        #     # Получаем сериализованное сообщение
+            #     # Получаем сериализованное сообщение
             serialized_message = await self.serialize_message(message)
             tasks.append(self.send_message(serialized_message))
         #
@@ -63,11 +60,13 @@ class MessageConsumer(AsyncWebsocketConsumer):
         """
         Метод для отправки одного сообщения через WebSocket.
         """
-        await self.send(text_data=json.dumps({"message": serialized_message}, cls=UUIDEncoder))
+        await self.send(
+            text_data=json.dumps({"message": serialized_message}, cls=UUIDEncoder)
+        )
 
     async def disconnect(self, close_code):
-        # Отключаем пользователя от группы при разрыве соединения
-        await self.channel_layer.group_discard(self.group_name, self.channel_name)
+        if hasattr(self, "group_name"):
+            await self.channel_layer.group_discard(self.group_name, self.channel_name)
 
     async def receive(self, text_data):
         data = json.loads(text_data)
@@ -131,8 +130,9 @@ class MessageConsumer(AsyncWebsocketConsumer):
     def get_messages(self, dialog_id):
         try:
             # Используем select_related для оптимизации запросов
-            return (Message.objects.filter(dialog_id=dialog_id)
-                    # .select_related("sender")
+            return (
+                Message.objects.filter(dialog_id=dialog_id)
+                # .select_related("sender")
             )
         except Message.DoesNotExist:
             return None

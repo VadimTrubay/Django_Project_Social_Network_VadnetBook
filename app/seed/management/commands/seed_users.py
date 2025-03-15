@@ -1,4 +1,3 @@
-import random
 from django.core.management.base import BaseCommand
 from faker import Faker
 from authenticate.models import CustomUserModel  # Replace with your actual user model

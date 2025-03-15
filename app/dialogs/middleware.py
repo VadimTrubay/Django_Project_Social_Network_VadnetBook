@@ -25,7 +25,7 @@ ALGORITHM = "HS256"
 def get_user(token):
     try:
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=ALGORITHM)
-    except Exception as e:
+    except Exception:
         return AnonymousUser()
 
     token_exp = datetime.fromtimestamp(payload["exp"])
@@ -45,19 +45,19 @@ class TokenAuthMiddleware(BaseMiddleware):
     async def __call__(self, scope, receive, send):
         close_old_connections()
         try:
-            token = dict(scope["headers"])[b"authorization"].decode("utf-8")
-            if token.startswith("Bearer "):
-                token = token[7:]
+            # token = dict(scope["headers"])[b"authorization"].decode("utf-8")
+            # if token.startswith("Bearer "):
+            #     token = token[7:]
 
             # Извлекаем токен из параметров URL
             # print(scope)
             # Декодируем query_string и парсим параметры
-            # query_string = scope['query_string'].decode('utf-8')
+            query_string = scope["query_string"].decode("utf-8")
             # print(f"Query string received: {query_string}")  # Debug log
-            # query_params = parse_qs(query_string)
-            #
-            # # Извлекаем токен
-            # token = query_params.get('token', [None])[0]
+            query_params = parse_qs(query_string)
+
+            # Извлекаем токен
+            token = query_params.get("token", [None])[0]
             # print(f"Token received: {token}")  # Debug log
             if token is None:
                 await send({"type": "websocket.close", "code": 4000})
